@@ -1,6 +1,6 @@
 import express from "express";
-import userRouter from "./routes/user";
-import nurseryRouter from "./routes/nursery";
+import userRouter from "./routes/userRoutes/signin";
+import nurseryRouter from "./routes/nurseryRoutes/nursery";
 
 const app = express();
 
