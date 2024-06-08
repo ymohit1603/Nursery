@@ -1,8 +1,6 @@
 import express, { Request, Response } from "express";
-import { PrismaClient } from '@prisma/client';
-export const prisma = new PrismaClient();
-
-export const router = express.Router();
+import prisma from "../../prisma";
+const router = express.Router();
 
 router.post("/signin", async (req: Request, res: Response) => {
     const { email, password } = req.body;

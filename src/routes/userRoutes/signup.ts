@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { router, prisma } from "./signin";
+import { router } from "./signin";
+import prisma from "../../prisma";
 router.post("/signup", async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!password || !email) {
