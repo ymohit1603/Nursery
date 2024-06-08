@@ -68,5 +68,4 @@ router.post("/", async (req: Request, res: Response) => {
     }
 });
 
-
-export default express;
+export default router;
