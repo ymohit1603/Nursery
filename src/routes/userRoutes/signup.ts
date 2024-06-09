@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
-import { router } from "./signin";
+import router from "./signin";
 import prisma from "../../prisma";
+import { userSchema } from "../../zodValidation";
 router.post("/signup", async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    if (!password || !email) {
-        res.status(400).json({ error: "Email and passwords are required" });
+    const result = userSchema.safeParse(req.body);
+
+    if (!result.success) {
+        return res.status(400).json(result.error.errors);
     }
+
+    const { email, password } = result.data;
 
     try {
         const existingUser = await prisma.user.findUnique({

@@ -1,5 +1,6 @@
 import express, { Request,Response } from "express";
 import prisma from "../../prisma";
+import { medicineSchema } from "../../zodValidation";
 
 const router = express.Router();
 
@@ -40,25 +41,21 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 //add medicine.
 router.post("/", async (req: Request, res: Response) => {
-    const { name, description, price, stock } = req.body;
-    if (!name || !description || !price || !stock) {
-        res.status(400).json({ error: "Incomplete Body" });
+    const result = medicineSchema.safeParse(req.body);
+
+    if (!result.success) {
+        return res.status(400).json(result.error.errors);
     }
 
-    const parsedPrice = parseFloat(price);
-    const parsedStock = parseInt(stock);
-
-    if (isNaN(parsedPrice) || isNaN(parsedStock)) {
-        return res.status(400).json({ error: 'Price and stock must be valid numbers' });
-    }
+  const { name, description, price, stock } = result.data;
 
     try {
         const newMedicine=await prisma.medicine.create({
             data: {
                 name,
                 description,
-                price:parsedPrice,
-                stock:parsedStock,
+                price:price,
+                stock:stock,
             }
         });
         res.status(200).json({ message: "New medecine added", newMedicine });

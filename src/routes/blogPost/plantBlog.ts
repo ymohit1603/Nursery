@@ -1,60 +1,75 @@
-import prisma from "../../prisma";
 import express, { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import { plantSchema } from "../../zodValidation";
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
-//return all blogs
+// Return all plants
 router.get("/", async (req: Request, res: Response) => {
-    try {   
-        const blogs = await prisma.plant.findMany();
-        res.status(200).json({ blogs: blogs });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Internal Server error" });
-    }
+  try {
+    const plants = await prisma.plant.findMany();
+    res.status(200).json({ plants });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ message: "Internal Server error" });
+  }
 });
 
-//create new blog
-router.post("/",async (req: Request, res: Response) => {
-    const {id,name,category,description} = req.body;
+// Create new plant
+router.post("/", async (req: Request, res: Response) => {
+  const result = plantSchema.safeParse(req.body);
 
-    if (!id||!name||!category||!description) {
-        res.status(400).json({ error: "Blog Body required" });
-    }
+  if (!result.success) {
+    return res.status(400).json(result.error.errors);
+  }
 
-    try {
-        const newBlog = await prisma.plant.create({
-            data: {
-                id,
-                name,
-                category,
-                description
-            }
-        });
-        res.status(200).json({ message: "Blog created" });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Internal server error" });
-    }
+  const { name, category, description } = result.data;
+
+  try {
+    const newPlant = await prisma.plant.create({
+      data: {
+        name,
+        category,
+        description: description || "",
+      },
+    });
+    res.status(201).json({ message: "Plant created", newPlant });
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-//get blog by id
+// Get plant by id
 router.get("/:id", async (req: Request, res: Response) => {
-    const { blogId } = req.params;
-    if (!blogId) {
-        res.status(400).json({ error: "blogId required" });
+  const { id } = req.params;
+  
+  if (!id) {
+    return res.status(400).json({ error: "Plant ID is required" });
+  }
+
+  try {
+    const plantId = parseInt(id);
+    if (isNaN(plantId)) {
+      return res.status(400).json({ error: "Invalid Plant ID" });
     }
-    try {
-        const singleBlog = await prisma.plant.findUnique({
-            where: {
-                id: parseInt(blogId)
-            }
-        });
-        res.status(200).json({ Blog: singleBlog });
+
+    const singlePlant = await prisma.plant.findUnique({
+      where: {
+        id: plantId,
+      },
+    });
+
+    if (!singlePlant) {
+      return res.status(404).json({ error: "Plant not found" });
     }
-    catch (error) {
-        res.status(500).json({ message: "Internal Server error" });
-    }
+
+    res.status(200).json({ plant: singlePlant });
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ message: "Internal Server error" });
+  }
 });
 
 export default router;

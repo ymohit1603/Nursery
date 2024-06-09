@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma";
 import router from "./med";
+import { orderSchema } from "../../zodValidation";
 
 router.post('/order', async (req:Request, res:Response) => {
-    const { userId, medicineId, quantity } = req.body;
-
-    if (!userId || !medicineId || !quantity) {
-        return res.status(400).json({ error: 'userId, medicineId, and quantity are required' });
-      }
     
+    const result = orderSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json(result.error.errors);
+    }
+  
+    const { userId, medicineId, quantity } = result.data;
+  
       try {
         const medicine = await prisma.medicine.findUnique({
           where: { id: medicineId },
