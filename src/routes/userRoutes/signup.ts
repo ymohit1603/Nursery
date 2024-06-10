@@ -31,6 +31,7 @@ router.post("/signup", async (req: Request, res: Response) => {
             });
             if (newUser) {
                 const token = signToken({ id: newUser.id });
+                res.cookie("token", token);
                 res.status(200).json({ message: "Successfully signed up", token:token});
             }
         }
