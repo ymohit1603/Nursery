@@ -1,17 +1,18 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { plantSchema } from "../../zodValidation";
+import { plantSchema } from "../../utils/zodValidation";
+import { isAuthenticated } from "../../middleware/auth";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // Return all plants
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", isAuthenticated,async (req: Request, res: Response) => {
   try {
     const plants = await prisma.plant.findMany();
     res.status(200).json({ plants });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
   }
 });

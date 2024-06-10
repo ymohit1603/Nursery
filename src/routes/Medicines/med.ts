@@ -1,11 +1,12 @@
 import express, { Request,Response } from "express";
-import prisma from "../../prisma";
-import { medicineSchema } from "../../zodValidation";
+import prisma from "../../utils/prisma";
+import { medicineSchema } from "../../utils/zodValidation";
+import { isAuthenticated } from "../../middleware/auth";
 
 const router = express.Router();
 
 //list all medicines.
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", isAuthenticated,async (req: Request, res: Response) => {
     try {
         const allMedicines = await prisma.medicine.findMany();
         res.status(200).json({ data: allMedicines });

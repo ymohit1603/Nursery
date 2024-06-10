@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import prisma from "../../prisma";
+import prisma from "../../utils/prisma";
 import router from "./med";
-import { orderSchema } from "../../zodValidation";
+import { orderSchema } from "../../utils/zodValidation";
+import { isAuthenticated } from "../../middleware/auth";
 
-router.post('/order', async (req:Request, res:Response) => {
+router.post('/order',isAuthenticated, async (req:Request, res:Response) => {
     
     const result = orderSchema.safeParse(req.body);
 

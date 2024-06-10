@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import prisma from "../../prisma";
-import { userSchema } from "../../zodValidation";
+import prisma from "../../utils/prisma";
+import { userSchema } from "../../utils/zodValidation";
+import { signToken } from "../../utils/jwt";
 const router = express.Router();
 
 router.post("/signin", async (req: Request, res: Response) => {
@@ -21,8 +22,10 @@ router.post("/signin", async (req: Request, res: Response) => {
         })
         if (!existingUser) {
             res.status(400).json({ error: "Incorrect Credentials" });
+        } else {
+            const token=signToken({ id: existingUser.id });
+            res.status(200).json({ message: "Successfully Signed Up" ,token:token});
         }
-        res.status(200).json({ message: "Successfully Signed Up" });
     }
     catch (error) {
         res.status(500).json({ error: "Error while signing up" });

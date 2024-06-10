@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import router from "./signin";
-import prisma from "../../prisma";
-import { userSchema } from "../../zodValidation";
+import prisma from "../../utils/prisma";
+import { userSchema } from "../../utils/zodValidation";
+import { signToken } from "../../utils/jwt";
 router.post("/signup", async (req: Request, res: Response) => {
     const result = userSchema.safeParse(req.body);
 
@@ -29,7 +30,8 @@ router.post("/signup", async (req: Request, res: Response) => {
                 }
             });
             if (newUser) {
-                res.status(200).json({ message: "Successfully signed up", user: newUser });
+                const token = signToken({ id: newUser.id });
+                res.status(200).json({ message: "Successfully signed up", token:token});
             }
         }
     } catch (error) {

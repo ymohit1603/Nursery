@@ -1,11 +1,12 @@
 import express,{Request,Response} from "express";
-import prisma from "../../prisma";
-import { appointmentSchema, cancelAppointmentSchema } from "../../zodValidation";
+import prisma from "../../utils/prisma";
+import { appointmentSchema, cancelAppointmentSchema } from "../../utils/zodValidation";
+import { isAuthenticated } from "../../middleware/auth";
 
 const router = express.Router();
 
 //book an appointment
-router.post("/", async (req: Request, res: Response) => {
+router.post("/",isAuthenticated, async (req: Request, res: Response) => {
   const result = appointmentSchema.safeParse(req.body);
 
   if (!result.success) {
