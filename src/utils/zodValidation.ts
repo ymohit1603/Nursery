@@ -9,6 +9,8 @@ export const userSchema = z.object({
 // Nursery Schema
 export const nurserySchema = z.object({
   name: z.string().min(1),
+  email: z.string().email(),
+  password:z.string().min(8),
   location: z.string().min(1),
   description: z.string().optional(),
 });
