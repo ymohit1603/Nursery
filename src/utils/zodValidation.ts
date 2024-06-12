@@ -51,4 +51,13 @@ export const orderSchema = z.object({
 export const cancelAppointmentSchema = z.object({
     userId: z.number().int(),
     nurseryId: z.number().int(),
-  });
+});
+  
+//order plant schema
+export const orderPlant = z.object({
+  
+  userId: z.number().int(),
+  plantId: z.number().int(),
+  quantity: z.number().int().positive(),
+  status:z.string()
+})
