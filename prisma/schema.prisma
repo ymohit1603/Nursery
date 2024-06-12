@@ -19,6 +19,7 @@ model User {
   password    String
   orders      Order[]
   Appointment Appointment[]
+  plantOrder  plantOrders[]
 }
 
 model Nursery {
@@ -46,6 +47,27 @@ model Plant {
   name        String
   category    String
   description String
+}
+
+model buyPlant {
+  id       Int           @id @default(autoincrement())
+  name     String
+  Price    Int
+  category String
+  Stock    Int
+  orders   plantOrders[]
+}
+
+model plantOrders {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  plantId   Int
+  quantity  Int
+  status    String   @default("pending")
+  orderedAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  buyPlant buyPlant @relation(fields: [plantId], references: [id])
 }
 
 model Medicine {
