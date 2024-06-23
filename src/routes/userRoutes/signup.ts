@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
-import router from "./signin";
+import express, { Request, Response } from "express";
 import prisma from "../../utils/prisma";
 import { userSchema } from "../../utils/zodValidation";
 import { signToken } from "../../utils/jwt";
+const router = express.Router();
+
 router.post("/signup", async (req: Request, res: Response) => {
     const result = userSchema.safeParse(req.body);
 

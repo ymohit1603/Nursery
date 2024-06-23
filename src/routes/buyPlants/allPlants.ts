@@ -5,7 +5,7 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 
 //get all plants
-router.get("/", isAuthenticated, async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
     
     try {
         const result = await prisma.buyPlant.findMany();
@@ -18,7 +18,7 @@ router.get("/", isAuthenticated, async (req: Request, res: Response) => {
 });
 
 //get plant by id
-router.get('/:id',isAuthenticated , async (req: Request, res: Response) => {
+router.get('/:id' , async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) {
         return res.status(400).json({ error: "id requires" });
