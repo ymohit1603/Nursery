@@ -9,12 +9,11 @@ router.get("/", async (req: Request, res: Response) => {
     
     try {
         const result = await prisma.buyPlant.findMany();
-        res.status(200).json({ result: result });
+        res.status(200).json({ plants: result ,message:"success"});
     }
     catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
-    
 });
 
 //get plant by id
