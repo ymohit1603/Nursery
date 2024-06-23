@@ -3,7 +3,7 @@ import { z } from 'zod';
 // User Schema
 export const userSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(6),
 });
 
 // Nursery Schema

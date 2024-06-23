@@ -4,11 +4,11 @@ import { userSchema } from "../../utils/zodValidation";
 import { signToken } from "../../utils/jwt";
 const router = express.Router();
 
-router.post("/signin", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
     const result = userSchema.safeParse(req.body);
 
     if (!result.success) {
-        return res.status(400).json(result.error.errors);
+        return res.status(400).json({error:"Invalid Credentials"});
     }
 
     const { email, password } = result.data;
@@ -32,5 +32,6 @@ router.post("/signin", async (req: Request, res: Response) => {
         res.status(500).json({ error: "Error while signing up" });
     }
 });
+
 
 export default router;
