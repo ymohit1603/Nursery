@@ -12,7 +12,7 @@ app.use(express.json());
 app.use("/user", userRouter);
 app.use("/nursery", nurseryRouter);
 app.use("/blog", blogRouter);
-app.use("/buy", buyMedicines);
+app.use("/medicines", buyMedicines);
 app.use("/appointment", bookAppointment);
 app.use("/getPlants", getPlants);
 
