@@ -6,7 +6,7 @@ import { isAuthenticated } from "../../middleware/auth";
 const router = express.Router();
 
 //list all medicines.
-router.get("/", isAuthenticated,async (req: Request, res: Response) => {
+router.get("/",async (req: Request, res: Response) => {
     try {
         const allMedicines = await prisma.medicine.findMany();
         res.status(200).json({ data: allMedicines });
@@ -41,7 +41,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 //add medicine.
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", isAuthenticated,async (req: Request, res: Response) => {
     const result = medicineSchema.safeParse(req.body);
 
     if (!result.success) {
