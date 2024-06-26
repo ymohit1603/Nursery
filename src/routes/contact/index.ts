@@ -1,8 +1,11 @@
 import express from "express";
 import { formData } from "../../utils/zodValidation";
 import prisma from "../../utils/prisma";
+import { sendMail } from "../../utils/sendMail";
 
 const router = express.Router();
+
+
 
 router.post('/',async (req,res) => {
     const contactData = formData.safeParse(req.body);
@@ -13,15 +16,16 @@ router.post('/',async (req,res) => {
     const { email, message } = contactData.data;
 
     try {
-         const result=await prisma.form.create({
+        const result = await prisma.form.create({
             data: {
                 email: email,
                 message: message
             }
-         });
+        });
         if (!result) {
             return res.status(500).json({ message: "error saving data" });
         }
+        sendMail({email, message});
         res.status(200).json({ message: "success" });
     }
     catch (error) {

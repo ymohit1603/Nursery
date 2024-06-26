@@ -2,10 +2,12 @@
   "dependencies": {
     "@prisma/client": "^5.15.0",
     "@types/cors": "^2.8.17",
+    "@types/nodemailer": "^6.4.15",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
     "prisma": "^5.15.0",
     "zod": "^3.23.8"
   },
