@@ -5,9 +5,10 @@ import blogRouter from "./routes/blogPost/plantBlog";
 import buyMedicines from "./routes/Medicines/med";
 import bookAppointment from "./routes/bookApointment/appointment";
 import getPlants from "./routes/buyPlants/allPlants";
-import  formContact  from "./routes/contact";
-
+import formContact from "./routes/contact";
+var cors = require("cors");
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use("/user", userRouter);
