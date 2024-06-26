@@ -5,6 +5,7 @@ import blogRouter from "./routes/blogPost/plantBlog";
 import buyMedicines from "./routes/Medicines/med";
 import bookAppointment from "./routes/bookApointment/appointment";
 import getPlants from "./routes/buyPlants/allPlants";
+import  formContact  from "./routes/contact";
 
 const app = express();
 app.use(express.json());
@@ -15,7 +16,7 @@ app.use("/blog", blogRouter);
 app.use("/medicines", buyMedicines);
 app.use("/appointment", bookAppointment);
 app.use("/getPlants", getPlants);
-
+app.use("/contact", formContact);
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
