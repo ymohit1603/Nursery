@@ -13,12 +13,15 @@ router.post('/',async (req,res) => {
     const { email, message } = contactData.data;
 
     try {
-         await prisma.form.create({
+         const result=await prisma.form.create({
             data: {
                 email: email,
                 message: message
             }
-        });
+         });
+        if (!result) {
+            return res.status(500).json({ message: "error saving data" });
+        }
         res.status(200).json({ message: "success" });
     }
     catch (error) {
