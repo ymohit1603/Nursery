@@ -61,3 +61,10 @@ export const orderPlant = z.object({
   quantity: z.number().int().positive(),
   status:z.string()
 })
+
+//form schema
+
+export const formData = z.object({
+  email: z.string().email(),
+  message:z.string()
+})
