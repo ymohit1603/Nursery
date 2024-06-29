@@ -20,6 +20,8 @@ model User {
   orders      Order[]
   Appointment Appointment[]
   plantOrder  plantOrders[]
+  comment     BlogComment[]
+  likes       Like[]
 }
 
 model Nursery {
@@ -95,4 +97,62 @@ model Form {
   id      Int    @id @default(autoincrement())
   email   String
   message String
+}
+
+model BlogPost {
+  id                 Int               @id @default(autoincrement())
+  title              String
+  content            String
+  name               String
+  imageUrl           String
+  comments           BlogComment[]
+  likes              Like[]
+  createdAt          DateTime          @default(now())
+  categoryType       CategoryType      @default(OTHER)
+  IndoorPlantBlog    IndoorPlantBlog?  @relation(fields: [indoorPlantBlogId], references: [id])
+  indoorPlantBlogId  Int?
+  OutdoorPlantBlog   OutdoorPlantBlog? @relation(fields: [outdoorPlantBlogId], references: [id])
+  outdoorPlantBlogId Int?
+  OtherPlantBlog     OtherPlantBlog?   @relation(fields: [otherPlantBlogId], references: [id])
+  otherPlantBlogId   Int?
+}
+
+model IndoorPlantBlog {
+  id    Int        @id @default(autoincrement())
+  posts BlogPost[]
+}
+
+model OutdoorPlantBlog {
+  id    Int        @id @default(autoincrement())
+  posts BlogPost[]
+}
+
+model OtherPlantBlog {
+  id    Int        @id @default(autoincrement())
+  posts BlogPost[]
+}
+
+enum CategoryType {
+  INDOOR
+  OUTDOOR
+  OTHER
+}
+
+model BlogComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  post      BlogPost @relation(fields: [postId], references: [id])
+  postId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  post      BlogPost @relation(fields: [postId], references: [id])
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
 }
