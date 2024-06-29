@@ -19,6 +19,7 @@ app.use("/appointment", bookAppointment);
 app.use("/getPlants", getPlants);
 app.use("/contact", formContact);
 
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

@@ -6,43 +6,82 @@ import { isAuthenticated } from "../../middleware/auth";
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Return all plants
-router.get("/", isAuthenticated,async (req: Request, res: Response) => {
+// Return all indoor plants
+router.get("/indoor",async (req: Request, res: Response) => {
   try {
-    const plants = await prisma.plant.findMany();
-    res.status(200).json({ plants });
+    const plants = await prisma.indoorPlantBlog.findMany();
+    res.status(200).json({indoorPlantBlogs: plants });
   } catch (error) {
     console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
   }
 });
 
-// Create new plant
-router.post("/", async (req: Request, res: Response) => {
-  const result = plantSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return res.status(400).json(result.error.errors);
-  }
-
-  const { name, category, description } = result.data;
-
+// Return all outdoor plants
+router.get("/outdoor",async (req: Request, res: Response) => {
   try {
-    const newPlant = await prisma.plant.create({
-      data: {
-        name,
-        category,
-        description: description || "",
-      },
-    });
-    res.status(201).json({ message: "Plant created", newPlant });
+    const plants = await prisma.outdoorPlantBlog.findMany();
+    res.status(200).json({outdoorPlantBlogs: plants });
   } catch (error) {
     console.error(error); 
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal Server error" });
   }
 });
 
-// Get plant by id
+// Return all other plants
+router.get("/other",async (req: Request, res: Response) => {
+  try {
+    const plants = await prisma.otherPlantBlog.findMany();
+    res.status(200).json({outdoorPlantBlogs: plants });
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+// // Create new plant
+// router.post("/", async (req: Request, res: Response) => {
+//   const result = plantSchema.safeParse(req.body);
+
+//   if (!result.success) {
+//     return res.status(400).json(result.error.errors);
+//   }
+
+//   const { name, category, description } = result.data;
+
+//   try {
+//     const newPlant = await prisma.plant.create({
+//       data: {
+//         name,
+//         category,
+//         description: description || "",
+//       },
+//     });
+//     res.status(201).json({ message: "Plant created", newPlant });
+//   } catch (error) {
+//     console.error(error); 
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
+
+
+// Return recently created blog posts
+router.get("/recent", async (req: Request, res: Response) => {
+  try {
+    const recentPosts = await prisma.blogPost.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 5,
+    });
+    res.status(200).json({ recentPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+// Get blogPost by id
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   
