@@ -9,6 +9,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.14",
     "prisma": "^5.15.0",
+    "stripe": "^16.2.0",
     "zod": "^3.23.8"
   },
   "name": "backend",
