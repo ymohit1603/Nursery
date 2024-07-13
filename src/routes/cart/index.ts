@@ -85,4 +85,48 @@ router.post('/', isAuthenticated, async (req, res) => {
 
 })
 
+
+router.delete('/', isAuthenticated, async (req: Request, res: Response) => {
+    const userId = req.user.id;
+    const { plantId } = req.body;
+
+    if (!plantId) {
+        return res.status(400).json({ error: "Plant ID required" });
+    }
+
+    try {
+        const userCart = await prisma.cart.findFirst({
+            where: {
+                userId: userId,
+            }
+        });
+
+        if (!userCart) {
+            return res.status(404).json({ error: "Cart not found" });
+        }
+
+        const cartItem = await prisma.cartItem.findFirst({
+            where: {
+                cartId: userCart.id,
+                plantId: plantId,
+            }
+        });
+
+        if (!cartItem) {
+            return res.status(404).json({ error: "Item not found in cart" });
+        }
+
+        await prisma.cartItem.delete({
+            where: {
+                id:cartItem.id,
+            }
+        });
+
+        res.status(200).json({ message: "Item deleted from cart" });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
 export default router;
