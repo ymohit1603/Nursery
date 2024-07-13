@@ -18,7 +18,10 @@ export const verifyToken = (token: string) => {
         if (!jwtSecret) {
             throw error("jwt secret required");
         }
+
         return jwt.verify(token, jwtSecret);
+       
+
     }
     catch (error) {
         console.log("wrong token", error);

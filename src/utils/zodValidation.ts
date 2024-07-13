@@ -68,3 +68,15 @@ export const formData = z.object({
   email: z.string().email(),
   message:z.string()
 })
+
+export const cartData = z.object({
+  imgUrl:z.string(),
+  title:z.string(),
+  description:z.string(),
+  currPrice:z.number().int().positive(),
+  selectedQuantity:z.number().int().positive()
+})
+
+// export const cartItemData = z.object({
+//   cartId
+// })
