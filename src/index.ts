@@ -6,6 +6,7 @@ import buyMedicines from "./routes/Medicines/med";
 import bookAppointment from "./routes/bookApointment/appointment";
 import getPlants from "./routes/buyPlants/allPlants";
 import formContact from "./routes/contact";
+import nearbyNursery from "./routes/nearbyNursery";
 var cors = require("cors");
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/user", userRouter);
 app.use("/nursery", nurseryRouter);
+app.use("/nearestNursery", nearbyNursery);
 app.use("/blog", blogRouter);
 app.use("/medicines", buyMedicines);
 app.use("/appointment", bookAppointment);
