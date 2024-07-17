@@ -1,7 +1,7 @@
 import express from "express";
 import { formData } from "../../utils/zodValidation";
 import prisma from "../../utils/prisma";
-import { sendMail } from "../../utils/sendMail";
+import { sendMail } from "../../services/sendMail";
 
 const router = express.Router();
 
