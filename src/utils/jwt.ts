@@ -9,7 +9,7 @@ export const signToken = (payload: object): string => {
         return jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
     }
     catch (error) {
-        console.error("Error signing token:", error.message);
+        console.error("Error signing token:");
         throw error;
     }
 };

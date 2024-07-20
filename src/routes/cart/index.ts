@@ -1,10 +1,17 @@
-import express, { Response,Request } from "express";
+import express, { Request, Response } from "express";
 import { isAuthenticated } from "../../middleware/auth";
 import prisma from "../../utils/prisma";
+import { User } from "@prisma/client";
+import { myRequest } from '../../types';
+import { JwtPayload } from "jsonwebtoken";
 const router = express.Router();
 
-router.get('/', isAuthenticated, async (req: Request, res: Response) => {
-    const userId = req.user.id;
+
+router.get('/', isAuthenticated, async (expressreq: Request, res: Response) => {
+    
+    const req = expressreq as myRequest;
+        const userId = req.user.id;
+    
 
     try {
         const userCart = await prisma.cart.findFirst({
@@ -26,7 +33,8 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
     }
 });
 
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', isAuthenticated, async (expressreq: Request, res: Response) => {
+    const req = expressreq as myRequest;
     const userId = req.user.id;
 
     const { plantId, quantity } = req.body;
@@ -86,7 +94,8 @@ router.post('/', isAuthenticated, async (req, res) => {
 })
 
 
-router.delete('/', isAuthenticated, async (req: Request, res: Response) => {
+router.delete('/', isAuthenticated, async (expressreq: Request, res: Response) => {
+    const req = expressreq as myRequest;
     const userId = req.user.id;
     const { plantId } = req.body;
 
