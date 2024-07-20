@@ -1,15 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../src/utils/prisma';
 
 export const seedUsers = async () => {
     const users = [
         {
-            email: 'john.doe@example.com',
+            email: 'joh1n.doe@example.com',
             password: 'password123',
         },
         {
-            email: 'jane.doe@example.com',
+            email: 'ja2ne.doe@example.com',
             password: 'password123',
         },
     ];
