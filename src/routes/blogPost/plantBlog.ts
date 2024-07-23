@@ -9,8 +9,14 @@ const prisma = new PrismaClient();
 // Return all indoor plants
 router.get("/indoor",async (req: Request, res: Response) => {
   try {
-    const plants = await prisma.indoorPlantBlog.findMany();
-    res.status(200).json({indoorPlantBlogs: plants });
+    const plants = await prisma.blogPost.findMany({
+      where: {
+        indoorPlantBlogId: {
+          not: null,
+        },
+      },
+    });
+    res.status(200).json({plants: plants ,message:"success"});
   } catch (error) {
     console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
@@ -20,8 +26,14 @@ router.get("/indoor",async (req: Request, res: Response) => {
 // Return all outdoor plants
 router.get("/outdoor",async (req: Request, res: Response) => {
   try {
-    const plants = await prisma.outdoorPlantBlog.findMany();
-    res.status(200).json({outdoorPlantBlogs: plants });
+    const plants = await prisma.blogPost.findMany({
+      where: {
+        outdoorPlantBlogId: {
+          not: null,
+        },
+      },
+    });
+    res.status(200).json({plants: plants ,message:"success"});
   } catch (error) {
     console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
@@ -31,8 +43,14 @@ router.get("/outdoor",async (req: Request, res: Response) => {
 // Return all other plants
 router.get("/other",async (req: Request, res: Response) => {
   try {
-    const plants = await prisma.otherPlantBlog.findMany();
-    res.status(200).json({outdoorPlantBlogs: plants });
+    const plants = await prisma.blogPost.findMany({
+      where: {
+        otherPlantBlogId: {
+          not: null,
+        },
+      },
+    });
+    res.status(200).json({plants: plants ,message:"other plants"});
   } catch (error) {
     console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
