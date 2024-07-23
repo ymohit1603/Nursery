@@ -2,13 +2,15 @@ import { PrismaClient } from '@prisma/client';
 import { seedUsers } from './seeders/user';
 import { seedBuyPlants } from './seeders/buyPlant';
 import { seedBuyMedicine } from './seeders/buyMedicines';
+import { seedBlog } from './seeders/blog';
 
 const prisma = new PrismaClient();
 
 const main = async () => {
   // await seedUsers();
   // await seedBuyPlants();
-  await seedBuyMedicine();
+  // await seedBuyMedicine();
+  // await seedBlog();
 };
 
 main()
