@@ -36,6 +36,7 @@ router.get('/:id' , async (req: Request, res: Response) => {
         res.status(200).json({ plant: result });
     }
     catch (error) {
+        console.log("break");
         res.status(500).json({ message: "Internal server error" });
     }
 })

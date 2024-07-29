@@ -78,6 +78,7 @@ model buyPlant {
   Stock    Int
   orders   plantOrders[]
   carts    CartItem[]
+  Review   Review[]
 }
 
 model plantOrders {
@@ -185,4 +186,7 @@ model Review {
   reviewText String   @db.Text
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  plantId Int
+  plant   buyPlant @relation(fields: [plantId], references: [id])
 }
