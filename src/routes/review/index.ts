@@ -15,14 +15,14 @@ router.get('/:productId', async (req, res) => {
     try {
         const plantWithReviews = await prisma.buyPlant.findUnique({
             where: { id: parseInt(productId) },
-            include: { review: true }, 
+            include: { Review: true }, 
         });
 
         if (!plantWithReviews) {
             return res.status(404).json({ message: "Plant not found" });
         }
 
-        return res.status(200).json(plantWithReviews);
+        return res.status(200).json(plantWithReviews.Review);
     } catch (e) {
         console.error(e);
         return res.status(500).json({ message: "Internal server error" });
@@ -42,12 +42,13 @@ router.post('/',async (req, res) => {
               name,
               email,
               rating,
-              review,
+              reviewText:review,
               plant: {
                 connect: { id: productId },
               },
             },
-          });
+        });
+        return res.status(201).json(newReview);
     } catch (error){
         return res.status(500).json({ message: "Internal server error" });
     }
