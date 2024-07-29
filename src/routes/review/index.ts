@@ -34,7 +34,7 @@ router.post('/',async (req, res) => {
     if (!data) {
         return res.status(400).json({ message: "Info required" });
     }
-    const { productId, name, email, rating, review } = data;
+    const { productId, name, email, rating, reviewText } = data;
 
     try {
         const newReview = await prisma.review.create({
@@ -42,15 +42,15 @@ router.post('/',async (req, res) => {
               name,
               email,
               rating,
-              reviewText:review,
+              reviewText:reviewText,
               plant: {
-                connect: { id: productId },
+                connect: { id: parseInt(productId) },
               },
             },
         });
         return res.status(201).json(newReview);
     } catch (error){
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" ,error});
     }
 })
 
