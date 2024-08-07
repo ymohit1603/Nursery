@@ -25,6 +25,5 @@ export const verifyToken = (token: string) => {
     }
     catch (error) {
         console.log("wrong token", error);
-        throw error;
     }
   };
