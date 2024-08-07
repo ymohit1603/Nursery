@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { plantSchema } from "../../utils/zodValidation";
+import { comment, plantSchema } from "../../utils/zodValidation";
 import { isAuthenticated } from "../../middleware/auth";
 
 const router = express.Router();
@@ -129,6 +129,54 @@ router.get("/:id", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error); 
     res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+
+// add comment to post
+router.post('/comment', isAuthenticated, async (req, res) => {
+  const parsedBody = comment.safeParse(req.body);
+  if (!parsedBody.success) {
+    return res.status(400).json({ errors: parsedBody.error.errors });
+  }
+
+  const postId  = parsedBody.data.id;
+  const data = parsedBody.data.data;
+  const { id } = req.body.user;
+
+  console.log(id);
+  console.log("before try",req.body.user,id);
+
+  try {
+    console.log("try");
+
+    const blogPost = await prisma.blogPost.findUnique({
+      where: {
+        id: postId
+      }
+    });
+    
+    console.log(blogPost, "success");
+
+    if (!blogPost) {
+      return res.status(400).json({ error: "Invalid PostId" });
+    }
+
+    const newComment = await prisma.blogComment.create({
+      data: {
+        postId: postId,
+        content: data,
+        authorId: id
+      }
+    });
+    
+    console.log(newComment);
+
+    res.status(200).json({ message: "New comment added" });
+
+  } catch (error) {
+    console.log("outer catch", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
