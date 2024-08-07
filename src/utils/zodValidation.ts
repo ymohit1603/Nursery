@@ -68,3 +68,9 @@ export const formData = z.object({
   email: z.string().email(),
   message:z.string()
 })
+
+//post comment
+export const comment = z.object({
+  id: z.number().int(),
+  data:z.string()
+})
