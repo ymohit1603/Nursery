@@ -8,10 +8,12 @@ import getPlants from "./routes/buyPlants/allPlants";
 import formContact from "./routes/contact";
 import nearbyNursery from "./routes/nearbyNursery";
 import reviewRouter from "./routes/review";
+import cookieParser from 'cookie-parser';
 var cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/nursery", nurseryRouter);
