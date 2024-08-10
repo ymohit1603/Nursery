@@ -71,6 +71,7 @@ export const formData = z.object({
 
 //post comment
 export const comment = z.object({
-  id: z.number().int(),
-  data:z.string()
+  pId: z.number().int(),
+  name: z.string(),
+  content:z.string()
 })
