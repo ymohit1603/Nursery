@@ -164,6 +164,7 @@ model BlogComment {
   content   String
   post      BlogPost @relation(fields: [postId], references: [id])
   postId    Int
+  name      String
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
   createdAt DateTime @default(now())
