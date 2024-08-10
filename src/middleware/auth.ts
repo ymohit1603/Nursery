@@ -18,7 +18,7 @@ export const isAuthenticated: RequestHandler = async (expressreq: Request, res: 
 
     if (!req.cookies || !req.cookies.jwt) {
         console.log("No cookies or JWT token found");
-        return res.status(400).json({ message: "No cookies found" });
+        return res.status(401).json({ message: "No cookies found" });
     }
 
     const token = req.cookies.jwt;
@@ -29,8 +29,8 @@ export const isAuthenticated: RequestHandler = async (expressreq: Request, res: 
       console.log("Decoded token:", decoded);
         
         if (!decoded) {
-            console.log("Invalid JWT token");
-            return res.status(400).json({ message: "Invalid JWT token" });
+            console.log(" JWT expired");
+            return res.status(401).json({ message: "Invalid JWT token" });
         }
         
         if (typeof decoded === 'string') {
