@@ -7,9 +7,9 @@ import { seedBlog } from './seeders/blog';
 const prisma = new PrismaClient();
 
 const main = async () => {
-  // await seedUsers();
-  // await seedBuyPlants();
-  // await seedBuyMedicine();
+  await seedUsers();
+  await seedBuyPlants();
+  await seedBuyMedicine();
   // await seedBlog();
 };
 
