@@ -117,6 +117,9 @@ router.get("/:id", async (req: Request, res: Response) => {
       where: {
         id: plantId,
       },
+      include:{
+        comments:true
+      }
     });
 
     if (!singlePlant) {
@@ -133,15 +136,36 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 
+//render all comments
+router.get('/comment',async (req, res) => {
+  const { pId } = req.body;
+  try {
+    const comment=await prisma.blogComment.findMany({
+      where: {
+        postId:pId
+      },
+    })
+
+    return res.status(200).json({ comment });
+  }
+  catch (e) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+})
+
+
 // add comment to post
 router.post('/comment', isAuthenticated, async (req, res) => {
+  console.log(req.body);
   const parsedBody = comment.safeParse(req.body);
   if (!parsedBody.success) {
+    console.log('error in parsing');
     return res.status(400).json({ errors: parsedBody.error.errors });
   }
 
-  const postId  = parsedBody.data.id;
-  const data = parsedBody.data.data;
+  const postId = parsedBody.data.pId;
+  const name = parsedBody.data.name;
+  const data = parsedBody.data.content;
   const { id } = req.body.user;
 
   console.log(id);
@@ -165,14 +189,15 @@ router.post('/comment', isAuthenticated, async (req, res) => {
     const newComment = await prisma.blogComment.create({
       data: {
         postId: postId,
+        name: name,
         content: data,
         authorId: id
       }
     });
-    
+
     console.log(newComment);
 
-    res.status(200).json({ message: "New comment added" });
+    res.status(200).json({ message: "New comment added" ,comment:newComment});
 
   } catch (error) {
     console.log("outer catch", error);
