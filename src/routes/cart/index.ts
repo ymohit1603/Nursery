@@ -1,16 +1,14 @@
 import express, { Request, Response } from "express";
 import { isAuthenticated } from "../../middleware/auth";
 import prisma from "../../utils/prisma";
-import { User } from "@prisma/client";
 import { myRequest } from '../../types';
-import { JwtPayload } from "jsonwebtoken";
 const router = express.Router();
 
 
-router.get('/', isAuthenticated, async (expressreq: Request, res: Response) => {
+router.get('/', isAuthenticated, async (req,res) => {
     
-    const req = expressreq as myRequest;
-        const userId = req.user.id;
+
+        const userId = req.body.id
     
 
     try {
@@ -33,70 +31,71 @@ router.get('/', isAuthenticated, async (expressreq: Request, res: Response) => {
     }
 });
 
-router.post('/', isAuthenticated, async (expressreq: Request, res: Response) => {
-    const req = expressreq as myRequest;
-    const userId = req.user.id;
-
+router.post('/', isAuthenticated, async (req,res) => {
+    
     const { plantId, quantity } = req.body;
 
     if (!plantId || !quantity) {
-        res.status(400).json({ message: "Plant id and quantity required" });
+        return res.status(400).json({ message: "User ID, Plant ID, and quantity are required" });
     }
-
+    
+    const userId = req.body.user.id;
+    console.log("userId", userId);
     try {
+   
         let userCart = await prisma.cart.findFirst({
-            where: {
-                userId: userId
-            }
-        })
+            where: { userId }
+        });
 
         if (!userCart) {
+            console.log("No userCart found, creating one");
             userCart = await prisma.cart.create({
-                data: {
-                    userId: userId
-                }
-        });
+                data: { userId }
+            });
         }
+
+        console.log(userCart, "userCart");
 
         const existingCartItem = await prisma.cartItem.findFirst({
             where: {
                 cartId: userCart.id,
-                plantId: plantId
+                plantId:parseInt(plantId)
             }
         });
 
+        console.log(existingCartItem, "existing cart");
+
+        let cartItem;
         if (existingCartItem) {
-            
-            await prisma.cartItem.update({
-                where: {
-                    id: existingCartItem.id
-                },
-                data: {
-                    quantity: existingCartItem.quantity + quantity
-                }
+            console.log("Updating cart item");
+            cartItem = await prisma.cartItem.update({
+                where: { id: existingCartItem.id },
+                data: { quantity: existingCartItem.quantity + quantity }
             });
         } else {
-           
-        await prisma.cartItem.create({
+            console.log("Creating new cart item");
+            cartItem = await prisma.cartItem.create({
                 data: {
                     cartId: userCart.id,
-                    plantId: plantId,
-                    quantity: quantity
+                    plantId:parseInt(plantId),
+                    quantity:parseInt(quantity)
                 }
-        });
+            });
         }
-        res.status(200).json({ message: "Item added to cart" });
-    }
-    catch (error) {
-        res.status(500).json({ message: "INternal server error" });
+
+        return res.status(200).json({ message: "Item added to cart", cart: cartItem });
+
+    } catch (error) {
+        console.error("Error adding item to cart:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 
 })
 
 
-router.delete('/', isAuthenticated, async (expressreq: Request, res: Response) => {
-    const req = expressreq as myRequest;
-    const userId = req.user.id;
+router.delete('/', isAuthenticated, async (req,res) => {
+  
+    const userId = req.body.id;
     const { plantId } = req.body;
 
     if (!plantId) {
