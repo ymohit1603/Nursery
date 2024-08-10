@@ -33,7 +33,7 @@ router.post("/", async (req: Request, res: Response) => {
             });
             if (newUser) {
                 const token = signToken({ id: newUser.id });
-                res.cookie("token", token);
+                res.cookie("jwt", token);
                 res.status(200).json({ message: "Successfully signed up", token:token});
             }
         }

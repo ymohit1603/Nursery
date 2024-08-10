@@ -24,7 +24,7 @@ router.post("/", async (req: Request, res: Response) => {
             res.status(400).json({ error: "Incorrect Credentials" });
         } else {
             const token = signToken({ id: existingUser.id });
-            res.cookie("token", token);
+            res.cookie("jwt", token,{httpOnly: true});
             res.status(200).json({ message: "Successfully Signed Up" ,token:token});
         }
     }
