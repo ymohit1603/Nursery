@@ -10,8 +10,12 @@ import nearbyNursery from "./routes/nearbyNursery";
 import reviewRouter from "./routes/review";
 import cookieParser from 'cookie-parser';
 var cors = require("cors");
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    credentials: true 
+};
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 

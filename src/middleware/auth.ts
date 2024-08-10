@@ -12,6 +12,9 @@ export const isAuthenticated: RequestHandler = async (expressreq: Request, res: 
     const req = expressreq as myRequest;
     console.log("Cookies:");
     console.log(req.cookies);
+    console.log(req.cookies.jwt);
+    
+
 
     if (!req.cookies || !req.cookies.jwt) {
         console.log("No cookies or JWT token found");
