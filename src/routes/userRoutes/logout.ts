@@ -1,9 +1,11 @@
-import { Response,Request } from "express";
+import express,{ Response,Request } from "express";
 import {  isAuthenticated } from "../../middleware/auth";
-import router from "./signin";
+const router = express.Router();
 
-
-router.post("/logout",isAuthenticated, (req:Request, res:Response) => {
-    res.clearCookie('token');
-    res.status(200).json({ message: "cookie cleared" });
+router.post("/", isAuthenticated, (req: Request, res: Response) => {
+    console.log("Hit me up babe");
+    res.clearCookie('jwt', { path: '/' });
+    res.status(200).send({ message: 'Logged out successfully' });
 })
+
+export default router;
